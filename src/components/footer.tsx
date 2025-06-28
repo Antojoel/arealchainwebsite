@@ -4,12 +4,7 @@ import Image from "next/image";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const productLinks = [
-    { name: "Areal TaaS", href: "/areal-suite/taas" },
-    { name: "Areal Mortgage", href: "/areal-suite/mortgage" },
-    { name: "Launchpad", href: "/areal-suite/launchpad" },
-    { name: "ArealPay", href: "/areal-suite/pay" },
-    { name: "Areal Marketplace", href: "/areal-suite/marketplace" },
+  const TestnetTools = [
     {
       name: "AREAL Testnet Validator App",
       href: "https://validator.testnet.arealscan.com/blocks",
@@ -23,6 +18,14 @@ export default function Footer() {
       href: "https://testnet.arealscan.com/dashboard",
     },
   ];
+
+  const productLinks = [
+    { name: "Areal TaaS", href: "/areal-suite/taas" },
+    { name: "Areal Mortgage", href: "/areal-suite/mortgage" },
+    { name: "Launchpad", href: "/areal-suite/launchpad" },
+    { name: "ArealPay", href: "/areal-suite/pay" },
+    { name: "Areal Marketplace", href: "/areal-suite/marketplace" },
+  ];
   const companyLinks = [
     { name: "About Us", href: "/company" },
     { name: "Roadmap", href: "/roadmap" },
@@ -35,9 +38,9 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-black/30 border-t border-gray-800">
+    <footer className="relative z-50 bg-[#171717] backdrop-blur-md border-t border-gray-800">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
               <Image
@@ -95,6 +98,23 @@ export default function Footer() {
             </h3>
             <ul className="mt-4 space-y-2">
               {legalLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-base text-gray-400 hover:text-[#F4B448]"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
+              Company
+            </h3>
+            <ul className="mt-4 space-y-2">
+              {TestnetTools.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -185,6 +205,19 @@ export default function Footer() {
               <span className="sr-only">LINKEDIN</span>
               <Image
                 src="/socialmedia/linkedin.svg"
+                alt="X Logo"
+                width={24}
+                height={24}
+                className="h-6 w-6"
+              />
+            </a>
+            <a
+              href="https://t.me/arealnow"
+              className="text-gray-400 hover:text-white"
+            >
+              <span className="sr-only">TELEGRAM</span>
+              <Image
+                src="/socialmedia/telegram.svg"
                 alt="X Logo"
                 width={24}
                 height={24}

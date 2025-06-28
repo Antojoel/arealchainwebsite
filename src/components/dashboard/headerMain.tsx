@@ -1,126 +1,200 @@
-// components/Header.tsx
-"use client";
-
-import React, { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
-import ConnectButton from "@/src/components/ConnectButton";
+import React, { useEffect } from "react";
+import { useWallet } from "@/src/contexts/WalletContext";
+import Image from "next/image";
 import { useUserDetails } from "@/src/hooks/useUserDetails";
 import { useUserStore } from "@/src/store/useUserStore";
-import {
-  Wallet,
-  ShieldCheck,
-  Clock,
-  AlertTriangle,
-  XCircle,
-} from "lucide-react";
-import Image from "next/image";
-
-interface WalletInfo {
-  name: string;
-  connected: boolean;
-  address?: string;
-  balance?: string;
-}
 
 const HeaderMain: React.FC = () => {
-  const setUserDetail = useUserStore((state) => state.setUserDetail);
-  const [mantraWallet, setMantraWallet] = useState<WalletInfo>({
-    name: "MANTRA Wallet",
-    connected: false,
-  });
+  const {
+    isInstalled,
+    isConnecting,
+    error,
+    account,
+    currentChainId,
+    isCorrectNetwork,
+    connect,
+    addNetwork,
+    addBSCNetwork,
+  } = useWallet();
 
-  const [ethWallet, setEthWallet] = useState<WalletInfo>({
-    name: "ETH MAINNET",
-    connected: false,
-  });
+  const { setUserDetail, setKycStatus, userDetail, kycStatus } = useUserStore();
+  const { data: apiData, isLoading } = useUserDetails();
 
-  const connectMantraWallet = () => {
-    setMantraWallet({
-      name: "MANTRA Wallet",
-      connected: true,
-      address: "0x1234...5678",
-      balance: "1,234.56 OM",
-    });
-  };
-
-  const connectEthWallet = () => {
-    setEthWallet({
-      name: "ETH MAINNET",
-      connected: true,
-      address: "0xabcd...efgh",
-      balance: "2.34 ETH",
-    });
-  };
-
-  const { data: userDetail, isLoading, error } = useUserDetails();
   useEffect(() => {
-    if (userDetail) {
-      setUserDetail(userDetail);
+    if (apiData?.data?.userDetail) {
+      setUserDetail(apiData.data.userDetail);
+      setKycStatus(apiData.data.kycStatus);
     }
-  }, [userDetail, setUserDetail]);
+  }, [apiData, setUserDetail, setKycStatus]);
 
-  function getKycLabel(status: number) {
-    switch (status) {
-      case 0:
-        return {
-          label: "Waiting for approval",
-          icon: <Clock size={16} className="text-yellow-400" />,
-          color: "text-yellow-400",
-        };
+  // Show network buttons only when:
+  // 1. Wallet is connected (account exists)
+  // 2. User is on wrong network (not BSC testnet)
+  const showNetworkButtons = account && !isCorrectNetwork;
+
+  const getNetworkName = (chainId: number | null) => {
+    switch (chainId) {
       case 1:
-        return {
-          label: "Verified",
-          icon: <ShieldCheck size={16} className="text-green-500" />,
-          color: "text-green-500",
-        };
-      case 2:
-        return {
-          label: "Rejected",
-          icon: <XCircle size={16} className="text-red-500" />,
-          color: "text-red-500",
-        };
-      case 3:
-        return {
-          label: "Not verified",
-          icon: <AlertTriangle size={16} className="text-gray-400" />,
-          color: "text-gray-400",
-        };
+        return "Ethereum Mainnet";
+      case 56:
+        return "BSC Mainnet";
+      case 97:
+        return "BSC Testnet";
+      case 137:
+        return "Polygon";
+      case 9473:
+        return "Areal Mainnet";
       default:
-        return {
-          label: "Unknown",
-          icon: <AlertTriangle size={16} className="text-gray-400" />,
-          color: "text-gray-400",
-        };
+        return chainId ? `Unknown Network (${chainId})` : "Unknown";
     }
-  }
+  };
 
-  // Fix: Access the nested userDetail data correctly
-  const userData = userDetail;
-  const kycStatus = userData?.status?.kyc?.status;
-  const kycInfo = kycStatus !== undefined ? getKycLabel(kycStatus) : null;
+  const getButtonText = () => {
+    if (isConnecting) return "Connecting...";
+    if (account) return `${account.slice(0, 6)}...${account.slice(-4)}`;
+    return "Connect Wallet";
+  };
+
+  const getButtonColor = () => {
+    if (account && isCorrectNetwork) {
+      return "bg-green-600 hover:bg-green-700"; // Green when connected to correct network
+    }
+    if (account && !isCorrectNetwork) {
+      return "bg-orange-600 hover:bg-orange-700"; // Orange when connected but wrong network
+    }
+    return "bg-[#F4B448] hover:bg-[#F4B448]/90"; // Default yellow
+  };
 
   return (
-    <header className="bg-gray-900 border-gray-800 border-b  px-6 py-4 flex justify-between items-center">
-      <div className="flex items-center space-x-4">
-        <Image src="/coin/text.png" alt="Logo" width={100} height={100} />
+    <header className="bg-gray-900 border-b border-gray-800 px-4 py-3 sm:px-6 md:px-8 lg:px-10 flex flex-wrap sm:flex-nowrap justify-between items-center gap-4">
+      <div className="flex items-center">
+        <Image
+          src="/coin/text.png"
+          alt="Logo"
+          width={80}
+          height={80}
+          className="w-24 sm:w-28 md:w-32 h-auto object-contain"
+        />
       </div>
+      <div className="flex justify-between items-center h-16">
+        {/* Logo/Brand */}
 
-      <div>
-        <div className="flex items-center space-x-4 border-1 border-white">
-          {kycInfo && !isLoading && (
-            <div className="flex items-center space-x-1">
-              {kycInfo.icon}
-              <span className={`text-xs ${kycInfo.color}`}>
-                KYC: {kycInfo.label}
-              </span>
+        {/* Wallet Section */}
+        <div className="flex items-center space-x-4">
+          {/* Current Network Display - Show when connected */}
+          {/* {account && currentChainId && (
+            <div
+              className={`px-3 py-2 rounded-lg text-xs font-medium ${
+                isCorrectNetwork
+                  ? "bg-green-500/20 text-green-300"
+                  : "bg-orange-500/20 text-orange-300"
+              }`}
+            >
+              {getNetworkName(currentChainId)}
+            </div>
+          )} */}
+
+          {/* Error Message - Show when there's an error */}
+          {/* {error && (
+            <div className="bg-red-500/20 text-red-300 px-3 py-2 rounded-lg text-sm max-w-xs truncate">
+              {error}
+            </div>
+          )} */}
+
+          {/* MetaMask Not Installed Warning */}
+          {!isInstalled && (
+            <div className="bg-yellow-500/20 text-yellow-300 px-3 py-2 rounded-lg text-sm">
+              <a
+                href="https://metamask.io/download/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                Install MetaMask
+              </a>
             </div>
           )}
+
+          {/* Network Buttons - Show only when connected but on wrong network */}
+          {/* {showNetworkButtons && ( */}
+          <div className="hidden md:flex space-x-2">
+            <button
+              onClick={addBSCNetwork}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm px-3 py-2 rounded-lg transition-colors font-medium"
+              title="Add BSC Testnet (Required for transactions)"
+            >
+              Add BSC Testnet
+            </button>
+            <button
+              onClick={addNetwork}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm px-3 py-2 rounded-lg transition-colors font-medium"
+              title="Add Areal Network (Optional)"
+            >
+              Add Areal Network
+            </button>
+          </div>
+          {/* )} */}
+
+          {/* Mobile Network Buttons - Show only when connected but on wrong network */}
+          {showNetworkButtons && (
+            <div className="md:hidden">
+              <div className="flex flex-col space-y-1">
+                <button
+                  onClick={addBSCNetwork}
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-2 py-1 rounded transition-colors"
+                >
+                  BSC Testnet
+                </button>
+                <button
+                  onClick={addNetwork}
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-2 py-1 rounded transition-colors"
+                >
+                  Areal Net
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Connect/Disconnect Wallet Button */}
+          <button
+            onClick={connect}
+            disabled={!isInstalled || isConnecting}
+            className={`${getButtonColor()} text-black font-semibold px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 relative`}
+            title={
+              account
+                ? isCorrectNetwork
+                  ? "Click to disconnect"
+                  : "Connected to wrong network - Click to disconnect"
+                : "Click to connect wallet"
+            }
+          >
+            {/* Connection Status Indicator */}
+            {account && (
+              <div
+                className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
+                  isCorrectNetwork ? "bg-green-400" : "bg-orange-400"
+                }`}
+              ></div>
+            )}
+
+            {getButtonText()}
+          </button>
         </div>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <ConnectButton />
-      </div>
+      {/* Mobile Error Message - Show below header on mobile */}
+      {/* {error && (
+        <div className="md:hidden bg-red-500/20 text-red-300 px-4 py-2 text-sm border-t border-gray-700">
+          ⚠️ {error}
+        </div>
+      )} */}
+
+      {/* Mobile Network Warning - Show below header when on wrong network */}
+      {/* {showNetworkButtons && (
+        <div className="md:hidden bg-orange-500/20 text-orange-300 px-4 py-2 text-sm border-t border-gray-700">
+          ⚠️ Please switch to BSC Testnet for transactions
+        </div>
+      )} */}
     </header>
   );
 };

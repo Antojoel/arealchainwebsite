@@ -36,7 +36,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-md border-b border-gray-800">
+    <nav className="fixed top-0 w-full z-50 bg-[#171717]/90 backdrop-blur-md border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -128,10 +128,10 @@ export default function Navbar() {
           {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Button
-              onClick={() => router.push("/contact")}
+              onClick={() => router.push("/login")}
               className="text-black font-semibold px-6 py-2 rounded-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-500 hover:scale-105 transition-all duration-300 shadow-lg"
             >
-              Join the Waitlist →
+              Login →
             </Button>
             {/* <CustomButton /> */}
           </div>
@@ -200,10 +200,10 @@ export default function Navbar() {
                 Contact
               </Link>
               <Button
-                onClick={() => router.push("/contact")}
+                onClick={() => router.push("/login")}
                 className="bg-[#F4B448] hover:bg-[#F4B448]/90 text-black font-semibold w-fit"
               >
-                Join the Waitlist →
+                Login
               </Button>
             </div>
           </div>
