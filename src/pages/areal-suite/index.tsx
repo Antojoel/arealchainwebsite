@@ -67,7 +67,7 @@ export default function ArealSuite() {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                   {products.map((product, index) => (
                     <Link href={product.href} key={index} passHref>
-                      <Card className="bg-gray-900/50 border-gray-800 hover:border-[#F4B448]/50 transition-all duration-300 cursor-pointer h-full flex flex-col group hover:transform hover:scale-[1.02] backdrop-blur-lg">
+                      <Card className="bg-gray-600/50 border-gray-800 hover:border-[#F4B448]/50 transition-all duration-300 cursor-pointer h-full flex flex-col group hover:transform hover:scale-[1.02] backdrop-blur-lg rounded-3xl">
                         <CardHeader>
                           <CardTitle className="text-white text-xl group-hover:text-[#F4B448] transition-colors">
                             {product.name}
@@ -86,21 +86,20 @@ export default function ArealSuite() {
                   ))}
                 </div>
 
-                <div className="bg-gray-900/50 rounded-xl p-12 border border-gray-800 text-center backdrop-blur-sm">
+                <div className="bg-gray-600/50 p-12 border border-gray-800 text-center backdrop-blur-sm rounded-3xl">
                   <h2 className="text-3xl font-bold text-white mb-6">
-                    Ready to Join the Revolution?
+                    Build the Future with Us.
                   </h2>
                   <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-                    Be the first to know when our new products go live. Join the
-                    waitlist for exclusive updates, early access, and special
-                    opportunities.
+                    AREAL is transforming how the world invests, buys, and sells
+                    real-world assets. Get in before the masses.
                   </p>
                   <Link href="/contact" passHref>
                     <Button
                       size="lg"
                       className="bg-[#F4B448] hover:bg-[#F4B448]/90 text-black font-semibold"
                     >
-                      Join the Waitlist
+                      Join the Revolution
                     </Button>
                   </Link>
                 </div>

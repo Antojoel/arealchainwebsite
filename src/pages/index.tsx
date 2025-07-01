@@ -442,6 +442,12 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
+          <motion.h2
+            className="text-3xl font-bold text-center text-white mt-8"
+            variants={fadeInUp}
+          >
+            Simple Secure SeamLess
+          </motion.h2>
         </div>
       </motion.section>
 
@@ -660,7 +666,7 @@ export default function Home() {
               FAQ
             </h2>
             <p className="text-gray-400 opacity-0">
-              Everything you need to know
+              Before You Ask, We’ve Tokenized the Answer.
             </p>
           </div>
           <div>
