@@ -33,9 +33,10 @@ export default function Footer() {
   const companyLinks = [
     { name: "About Us", href: "/company" },
     { name: "Roadmap", href: "/roadmap" },
-    // { name: "Blog", href: "/blog" },
+    { name: "Partner", href: "/#partners" },
     { name: "Contact", href: "/contact" },
     { name: "FAQ'S", href: "/faqs" },
+
   ];
   const legalLinks = [
     { name: "Privacy Policy", href: "/privacy-policy" },
@@ -49,7 +50,7 @@ export default function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/Logo1.png"
+                src="/Logo1.avif"
                 alt="Areal Logo"
                 width={120}
                 height={40}
