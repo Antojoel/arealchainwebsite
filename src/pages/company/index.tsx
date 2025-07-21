@@ -1,5 +1,6 @@
 import Layout from "@/src/components/layout";
 import TwitterFeed from "@/src/components/TwitterFeed"; // Import the new component
+import DiscordMessages from "@/src/components/DiscordMessages";
 import {
   Card,
   CardContent,
@@ -22,7 +23,11 @@ import { motion, useInView } from "framer-motion";
 import { JSX, useEffect, useRef, useState } from "react";
 import SplineCompany from "@/src/components/SplineCompany";
 import { useRouter } from "next/router";
-import SplineCube from "@/src/components/SplineCube";
+import dynamic from "next/dynamic";
+
+const SplineCube = dynamic(() => import("@/src/components/SplineCube"), {
+  ssr: false,
+});
 
 interface TeamMember {
   name: string;
@@ -202,7 +207,7 @@ export default function Company(): JSX.Element {
   return (
     <Layout>
       <div className="relative z-0">
-        <SplineCompany />
+        <SplineCube />
         <div className="relative z-10 backdrop-blur-sm">
           {/* Hero Section */}
           <div className="pt-32 pb-20 px-4">
@@ -507,10 +512,12 @@ export default function Company(): JSX.Element {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-transparent hover:bg-gray-800/50 text-white font-semibold px-2 py-2 rounded-md mt-2 sm:mt-0 w-full sm:w-auto transition-colors duration-200"
                       >
-                        <img
+                        <Image
                           src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
                           alt="LinkedIn"
                           className="w-5 h-5"
+                          width={20}
+                          height={20}
                         />
                         Connect on LinkedIn
                       </a>
@@ -561,7 +568,8 @@ export default function Company(): JSX.Element {
                 variants={fadeInUp}
               >
                 <div className="max-w-full mx-auto">
-                  <TwitterFeed />
+                  {/* <TwitterFeed /> */}
+                  <DiscordMessages />
                 </div>
               </motion.div>
             </div>

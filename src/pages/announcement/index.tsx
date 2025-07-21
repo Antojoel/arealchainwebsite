@@ -14,7 +14,13 @@ import {
   getAnnouncementsByCategory,
 } from "@/src/lib/announcementData";
 import type { Announcement } from "@/src/lib/announcementData";
-import SplineAnnouncement from "@/src/components/SplineAnnouncement";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const SplineAnnouncement = dynamic(
+  () => import("@/src/components/SplineAnnouncement"),
+  { ssr: false }
+);
 
 export default function Announcement() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -49,9 +55,11 @@ export default function Announcement() {
                       <Card className="bg-gray-900/50 border-gray-800 hover:border-[#F4B448]/50 transition-all duration-300 cursor-pointer hover:transform hover:scale-[1.02]">
                         <CardHeader className="p-0">
                           <div className="aspect-video bg-black rounded-t-lg overflow-hidden p-2">
-                            <img
+                            <Image
                               src={announcement.image || "/placeholder.svg"}
                               alt={announcement.title}
+                              width={800}
+                              height={450}
                               className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                             />
                           </div>
