@@ -1,7 +1,37 @@
 {
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/whitepaper",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    },
+    {
+      "source": "/ArealChain_Whitepaper.pdf",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/pdf"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "inline; filename=\"ArealChain_Whitepaper.pdf\""
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/((?!whitepaper|ArealChain_Whitepaper\\.pdf).*)",
       "headers": [
         {
           "key": "X-Frame-Options",
