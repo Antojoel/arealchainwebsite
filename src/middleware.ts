@@ -20,11 +20,13 @@ export async function middleware(request: NextRequest) {
     "/company",
     "/vip-member",
     "/property",
-    "/announcement",
     "/faqs",
     "/robots.txt",
     "/sitemap-0.xml",
     "/whitepaper",
+    "/brand-guidelines",
+    "/contributors-access",
+    "/development-hub",
   ];
 
   const isPublicPath = publicPaths.some(
@@ -89,6 +91,6 @@ export const config = {
      * 5. /*.{png,jpg,jpeg,gif,webp,ico,svg} (image files)
      * 6. /favicon.ico, /sitemap.xml (public files)
      */
-    "/((?!api/auth|_next|static|public|.*.(?:png|avif|mp4|pdf|jpg|jpeg|gif|webp|ico|svg)$|favicon.ico|sitemap.xml).*)",
+    "/((?!api/auth|_next|static|public|.*.(?:png|avif|mp4|pdf|jpg|jpeg|gif|zip|webp|ico|svg)$|favicon.ico|sitemap.xml).*)",
   ],
 };
