@@ -5,6 +5,7 @@ interface SignupRequestBody {
   username: string;
   password: string;
   otp?: string;
+  referralId?: string;
 }
 
 interface ApiResponse {
@@ -24,7 +25,7 @@ export default async function handler(
     });
   }
 
-  const { email, username, password, otp } = req.body as SignupRequestBody;
+  const { email, username, password, otp, referralId } = req.body as SignupRequestBody;
 
   // Validate required fields
   if (!email || !username || !password) {
@@ -51,6 +52,7 @@ export default async function handler(
       username,
       password,
       ...(otp && { verifyCode: parseInt(otp) }),
+      ...(referralId && { referralId }),
     };
 
     console.log(
